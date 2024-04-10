@@ -15,11 +15,12 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "cd build ; cmake --build .",
+      "command": "cd build ; cmake --build . ; cd ../test-files ; debugir hello.ll",
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "dependsOn": ["config"]
     }
   ]
 }
