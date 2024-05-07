@@ -1,50 +1,29 @@
-cmake_minimum_required(VERSION 3.5.1)
+#building out of llvm sources  is not possible, see:
+#https://lists.llvm.org/pipermail/llvm-dev/2019-March/130706.html
+message (STATUS "Found tool DebugIR")
 
-project(DebugIR LANGUAGES C CXX)
+#cmake_minimum_required(VERSION 3.5.1)
 
-# export compile commands
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# C++ standard
-set(CMAKE_CXX_STANDARD 20)
+project("DebugIR")
 
-# detect operating system
-message(STATUS "We are on a ${CMAKE_SYSTEM_NAME} system")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+set(LLVM_LINK_COMPONENTS
+  ${LLVM_TARGETS_TO_BUILD}
+  support
+  core
+  irreader
+  transformutils
+  Passes
+  )
 
-# Print build type: Debug/Release etc.
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-#
-# check dependencies
-#
-# LLVM stuff
-find_package(LLVM 17.0 REQUIRED CONFIG)
-message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
-message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
-# Find the libraries that correspond to the LLVM components we use
-llvm_map_components_to_libnames(llvm_libs support core irreader transformutils Passes)
+message (STATUS "${PROJECT_BINARY_DIR}")
+message (STATUS "${PROJECT_SOURCE_DIR}")
 
-add_executable(debugir
-  DebugIR.cpp
-  Main.cpp
-)
+include_directories(include)
 
-if (NOT LLVM_ENABLE_RTTI)
-  message(STATUS "LLVM does not have RTTI enabled. Building with -fno-rtti")
-  target_compile_options(debugir PRIVATE -fno-rtti)
-endif()
+add_llvm_tool(DebugIR
+  ${PROJECT_SOURCE_DIR}/Main.cpp
+  )
 
-# compiler and linker options
-target_compile_options(debugir PRIVATE
-  -Wall
-  -Werror
-  -pedantic
-  -Wextra
-  -Wno-unknown-pragmas
-  -Wno-unused-parameter
-)
+add_subdirectory(lib)
 
-separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
-target_compile_definitions(debugir PUBLIC ${LLVM_DEFINITIONS_LIST})
-target_include_directories(debugir PUBLIC ${PROJECT_SOURCE_DIR})
-target_include_directories(debugir PUBLIC ${LLVM_INCLUDE_DIRS})
-target_link_libraries (debugir PUBLIC ${llvm_libs})
+target_link_libraries (DebugIR PRIVATE debugIrFramework)

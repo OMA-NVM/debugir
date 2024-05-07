@@ -12,7 +12,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         gcc gdb cmake make ninja-build libboost-all-dev git \
         htop wget fish zsh lld time parallel \
         icecc icecream-sundae libcolamd2 \
-        build-essential doxygen libzstd-dev
+        build-essential doxygen libzstd-dev clang
 
 # Set environment variables
 ENV PATH=$PATH:/workspaces/debugir/build/

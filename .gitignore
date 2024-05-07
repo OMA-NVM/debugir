@@ -11,3 +11,6 @@ hello.ll
 hello.dbg.ll
 .cache/
 *.out
+*.DS_Store
+*.bin
+*.S
