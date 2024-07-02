@@ -6,7 +6,7 @@
     {
       "label": "config",
       "type": "shell",
-      "command": "mkdir build ; cd build ; cmake -DCMAKE_BUILD_TYPE=Release  ../ ; mv compile_commands.json ../compile_commands.json",
+      "command": "sh config.sh",
       "group": {
         "kind": "build",
         "isDefault": false
@@ -15,7 +15,7 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "cd build ; cmake --build . ; cd ../test-files ; debugir hello.ll",
+      "command": "cd build ; ninja",
       "group": {
         "kind": "build",
         "isDefault": true
