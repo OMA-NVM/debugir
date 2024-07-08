@@ -22,6 +22,7 @@ add_llvm_component_library(LLVMPasses
   IPO
   InstCombine
   IRPrinter
+  LayerRelation
   ObjCARC
   Scalar
   Support
